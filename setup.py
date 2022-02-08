@@ -8,7 +8,9 @@ setup(
     author='Christophe Gagnier',
     license='GNU General Public License v3 (GPLv3)',
     packages=['pytechnove'],
-    install_requires=[],
+    install_requires=[
+        'httpx'
+    ],
 
     classifiers=[
         'Development Status :: 1 - Planning',
