@@ -1,6 +1,6 @@
 {
-  "name": "pytechnove",
-  "version": "0.0.0",
+  "name": "python-technove",
+  "version": "1.0.0",
   "private": true,
   "description": "Asynchronous Python client for TechnoVE",
   "scripts": {

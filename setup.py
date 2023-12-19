@@ -2,13 +2,13 @@
 from setuptools import setup
 
 setup(
-    name="pytechnove",
-    version="0.1.0",
+    name="python-technove",
+    version="1.0.0",
     description="TechnoVE local station API library",
     url="https://github.com/moustachauve/pytechnove",
     author="Christophe Gagnier",
     license="GNU General Public License v3 (GPLv3)",
-    packages=["pytechnove"],
+    packages=["python-technove"],
     install_requires=["httpx"],
     classifiers=[
         "Development Status :: 1 - Planning",

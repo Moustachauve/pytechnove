@@ -16,13 +16,13 @@ homepage = "https://github.com/Moustachauve/pytechnove"
 keywords = ["TechnoVE", "EV", "Charger", "client"]
 license = "MIT"
 maintainers = ["Christophe Gagnier <christopheextensions@gmail.com>"]
-name = "TechnoVE"
+name = "python-technove"
 packages = [
   {include = "technove", from = "src"},
 ]
 readme = "README.md"
 repository = "https://github.com/Moustachauve/pytechnove"
-version = "0.0.0"
+version = "1.0.0"
 
 [tool.poetry.dependencies]
 aiohttp = ">=3.0.0"
