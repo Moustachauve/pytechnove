@@ -15,7 +15,7 @@ documentation = "https://github.com/Moustachauve/pytechnove"
 homepage = "https://github.com/Moustachauve/pytechnove"
 keywords = ["TechnoVE", "EV", "Charger", "client"]
 license = "MIT"
-maintainers = ["Franck Nijhof <opensource@frenck.dev>"]
+maintainers = ["Christophe Gagnier <christopheextensions@gmail.com>"]
 name = "TechnoVE"
 packages = [
   {include = "technove", from = "src"},
