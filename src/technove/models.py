@@ -2,7 +2,33 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import Enum
 from typing import Any
+
+from technove.exceptions import TechnoVEError
+
+
+class Status(Enum):
+    """Describes the status of a TechnoVE station."""
+
+    UNPLUGGED = "unplugged"
+    PLUGGED_WAITING = "plugged_waiting"
+    PLUGGED_CHARGING = "plugged_charging"
+
+    @classmethod
+    def build(cls: type[Status], status: int) -> Status:
+        """Parse the status code int to a Status object."""
+        statuses = {
+            65: Status.UNPLUGGED,
+            66: Status.PLUGGED_WAITING,
+            67: Status.PLUGGED_CHARGING,
+        }
+
+        if status in statuses:
+            return statuses[status]
+
+        error_message = f"The status code {status} is not a valid status."
+        raise TechnoVEError(error_message)
 
 
 class Station:
@@ -60,7 +86,7 @@ class Info:  # pylint: disable=too-many-instance-attributes
     network_ssid: str
     normal_period_active: bool
     rssi: int
-    status: int
+    status: Status
     time: int
     version: str
     voltage_in: int
@@ -99,7 +125,7 @@ class Info:  # pylint: disable=too-many-instance-attributes
             network_ssid=data.get("network_ssid", "Unknown"),
             normal_period_active=data.get("normalPeriodActive", False),
             rssi=data.get("rssi", 0),
-            status=data.get("status", 0),
+            status=Status.build(data.get("status", 0)),
             time=data.get("time", 0),
             version=data.get("version", "Unknown"),
             voltage_in=data.get("voltageIn", 0),

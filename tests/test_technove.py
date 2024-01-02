@@ -183,4 +183,5 @@ async def test_empty_full_responses(aresponses: ResponsesMockServer) -> None:
     )
     async with aiohttp.ClientSession() as session:
         technove = TechnoVE("example.com", session=session)
-        await technove.update()
+        with pytest.raises(TechnoVEError):
+            await technove.update()
