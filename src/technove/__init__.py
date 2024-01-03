@@ -5,14 +5,12 @@ from .exceptions import (
     TechnoVEConnectionTimeoutError,
     TechnoVEError,
 )
-from .models import (
-    Info,
-    Station,
-)
+from .models import Info, Station, Status
 from .technove import TechnoVE
 
 __all__ = [
     "Station",
+    "Status",
     "Info",
     "TechnoVE",
     "TechnoVEConnectionError",
