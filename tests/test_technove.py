@@ -6,7 +6,7 @@ import aiohttp
 import pytest
 from aresponses import Response, ResponsesMockServer
 
-from technove import TechnoVE
+from technove import Station, TechnoVE
 from technove.exceptions import TechnoVEConnectionError, TechnoVEError
 
 
@@ -185,3 +185,12 @@ async def test_empty_full_responses(aresponses: ResponsesMockServer) -> None:
         technove = TechnoVE("example.com", session=session)
         with pytest.raises(TechnoVEError):
             await technove.update()
+
+
+@pytest.mark.asyncio
+async def test_set_charging_enabled_auto_charge() -> None:
+    """Test failure when enabling charging manually and auto-charge is enabled."""
+    technove = TechnoVE("example.com")
+    technove.station = Station({"auto_charge": True})
+    with pytest.raises(TechnoVEError):
+        await technove.set_charging_enabled(can_charge=True)
