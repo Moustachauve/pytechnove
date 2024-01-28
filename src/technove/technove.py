@@ -161,14 +161,14 @@ class TechnoVE:
             "/station/set/automatic", method="POST", data={"activated": enabled}
         )
 
-    async def set_charging_enabled(self, *, can_charge: bool) -> None:
+    async def set_charging_enabled(self, *, enabled: bool) -> None:
         """Set whether the charging station is allowed to provide power or not.
 
         This can only be set if the auto_charge feature is not enabled.
 
         Args:
         ----
-            can_charge: True to allow a plugged-in vehicle to charge, otherwise false.
+            enabled: True to allow a plugged-in vehicle to charge, otherwise false.
 
         Raises:
         ------
@@ -177,7 +177,7 @@ class TechnoVE:
         if self.station and self.station.info.auto_charge:
             msg = "Cannot start or stop charging when auto-charge is enabled."
             raise TechnoVEError(msg)
-        action = "start" if can_charge else "stop"
+        action = "start" if enabled else "stop"
         await self.request(f"/station/control/{action}")
 
     async def close(self) -> None:
