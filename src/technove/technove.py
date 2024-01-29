@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 from dataclasses import dataclass
 from typing import Any, Self
 
@@ -97,16 +98,25 @@ class TechnoVE:
                     headers=headers,
                 )
 
+            content_type = response.headers.get("Content-Type", "")
             if response.status // 100 in [4, 5]:
                 contents = await response.read()
                 response.close()
 
+                if content_type == "application/json":
+                    raise TechnoVEError(
+                        response.status,
+                        json.loads(contents.decode("utf8")),
+                    )
                 raise TechnoVEError(
                     response.status,
                     {"message": contents.decode("utf8")},
                 )
 
-            response_data = await response.json()
+            if "application/json" in content_type:
+                response_data = await response.json()
+            else:
+                response_data = await response.text()
 
         except asyncio.TimeoutError as exception:
             msg = (
@@ -133,8 +143,42 @@ class TechnoVE:
         -------
             TechnoVE station data.
         """
-        self.station = Station(await self.request("/station/get/info"))
+        data = await self.request("/station/get/info")
+        if not data:
+            msg = "No data was returned by the station"
+            raise TechnoVEError(msg)
+        self.station = Station(data)
         return self.station
+
+    async def set_auto_charge(self, *, enabled: bool) -> None:
+        """Set whether the auto-charge feature is enabled or disabled.
+
+        Args:
+        ----
+            enabled: True to enable the auto-charge feature, otherwise false.
+        """
+        await self.request(
+            "/station/set/automatic", method="POST", data={"activated": enabled}
+        )
+
+    async def set_charging_enabled(self, *, enabled: bool) -> None:
+        """Set whether the charging station is allowed to provide power or not.
+
+        This can only be set if the auto_charge feature is not enabled.
+
+        Args:
+        ----
+            enabled: True to allow a plugged-in vehicle to charge, otherwise false.
+
+        Raises:
+        ------
+            TechnoVEError: If auto_charge is enabled.
+        """
+        if self.station and self.station.info.auto_charge:
+            msg = "Cannot start or stop charging when auto-charge is enabled."
+            raise TechnoVEError(msg)
+        action = "start" if enabled else "stop"
+        await self.request(f"/station/control/{action}")
 
     async def close(self) -> None:
         """Close open client session."""

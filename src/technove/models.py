@@ -11,6 +11,7 @@ from technove.exceptions import TechnoVEError
 class Status(Enum):
     """Describes the status of a TechnoVE station."""
 
+    UNKNOWN = "unknown"
     UNPLUGGED = "unplugged"
     PLUGGED_WAITING = "plugged_waiting"
     PLUGGED_CHARGING = "plugged_charging"
@@ -19,6 +20,7 @@ class Status(Enum):
     def build(cls: type[Status], status: int) -> Status:
         """Parse the status code int to a Status object."""
         statuses = {
+            None: Status.UNKNOWN,
             65: Status.UNPLUGGED,
             66: Status.PLUGGED_WAITING,
             67: Status.PLUGGED_CHARGING,
@@ -125,7 +127,7 @@ class Info:  # pylint: disable=too-many-instance-attributes
             network_ssid=data.get("network_ssid", "Unknown"),
             normal_period_active=data.get("normalPeriodActive", False),
             rssi=data.get("rssi", 0),
-            status=Status.build(data.get("status", 0)),
+            status=Status.build(data.get("status", None)),
             time=data.get("time", 0),
             version=data.get("version", "Unknown"),
             voltage_in=data.get("voltageIn", 0),
