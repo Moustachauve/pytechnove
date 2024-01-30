@@ -11,7 +11,7 @@ from technove.exceptions import TechnoVEError
 class Status(Enum):
     """Describes the status of a TechnoVE station."""
 
-    UNKNOWN = "unknown"
+    UNKNOWN = None
     UNPLUGGED = "unplugged"
     PLUGGED_WAITING = "plugged_waiting"
     PLUGGED_CHARGING = "plugged_charging"
