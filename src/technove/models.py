@@ -15,6 +15,8 @@ class Status(Enum):
     UNPLUGGED = "unplugged"
     PLUGGED_WAITING = "plugged_waiting"
     PLUGGED_CHARGING = "plugged_charging"
+    OUT_OF_ACTIVATION_PERIOD = "out_of_activation_period"
+    HIGH_CHARGE_PERIOD = "high_charge_period"
 
     @classmethod
     def build(cls: type[Status], status: int) -> Status:
@@ -24,6 +26,8 @@ class Status(Enum):
             65: Status.UNPLUGGED,
             66: Status.PLUGGED_WAITING,
             67: Status.PLUGGED_CHARGING,
+            83: Status.OUT_OF_ACTIVATION_PERIOD,
+            84: Status.HIGH_CHARGE_PERIOD,
         }
 
         if status in statuses:
