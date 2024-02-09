@@ -6,7 +6,7 @@ import aiohttp
 import pytest
 from aresponses import Response, ResponsesMockServer
 
-from technove import Station, TechnoVE
+from technove import Station, Status, TechnoVE
 from technove.exceptions import TechnoVEConnectionError, TechnoVEError
 
 
@@ -213,6 +213,26 @@ async def test_update_partial_responses(aresponses: ResponsesMockServer) -> None
         technove = TechnoVE("example.com", session=session)
         station = await technove.update()
         assert station.info.name == "testing"
+
+
+@pytest.mark.asyncio
+async def test_update_unknown_status(aresponses: ResponsesMockServer) -> None:
+    """Test handling of unknown status received from the API."""
+    aresponses.add(
+        "example.com",
+        "/station/get/info",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text='{"name":"testing", "status":"1234"}',
+        ),
+    )
+    async with aiohttp.ClientSession() as session:
+        technove = TechnoVE("example.com", session=session)
+        station = await technove.update()
+        assert station.info.name == "testing"
+        assert station.info.status == Status.UNKNOWN
 
 
 @pytest.mark.asyncio

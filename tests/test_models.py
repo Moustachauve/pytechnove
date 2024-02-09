@@ -1,9 +1,7 @@
 """Tests for `technove.TechnoVE`."""
 
 
-import pytest
-
-from technove import Status, TechnoVEError
+from technove import Status
 
 
 def test_status_build() -> None:
@@ -13,5 +11,4 @@ def test_status_build() -> None:
 
 def test_status_build_unknown() -> None:
     """Test status build with an unknown status code."""
-    with pytest.raises(TechnoVEError):
-        Status.build(42)
+    assert Status.build(42) == Status.UNKNOWN

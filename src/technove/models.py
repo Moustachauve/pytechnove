@@ -5,8 +5,6 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any
 
-from technove.exceptions import TechnoVEError
-
 
 class Status(Enum):
     """Describes the status of a TechnoVE station."""
@@ -29,8 +27,7 @@ class Status(Enum):
         if status in statuses:
             return statuses[status]
 
-        error_message = f"The status code {status} is not a valid status."
-        raise TechnoVEError(error_message)
+        return Status.UNKNOWN
 
 
 class Station:
