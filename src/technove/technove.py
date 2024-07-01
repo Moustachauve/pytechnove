@@ -1,10 +1,11 @@
 """Asynchronous Python client for TechnoVE."""
+
 from __future__ import annotations
 
 import asyncio
 import json
 from dataclasses import dataclass
-from typing import Any, Self
+from typing import Any, Final, Self
 
 import aiohttp
 import backoff
@@ -14,8 +15,13 @@ from .exceptions import (
     TechnoVEConnectionError,
     TechnoVEConnectionTimeoutError,
     TechnoVEError,
+    TechnoVEOutOfBoundError,
 )
 from .models import Station
+
+# TechnoVE stations don't allow setting values lower than 8. Calling the API with
+# a smaller value will just be ignored.
+MIN_CURRENT: Final[int] = 8
 
 
 @dataclass
@@ -36,11 +42,18 @@ class TechnoVE:
     # /station/network/list
     # /station/get/schedule
     # /station/partage/get/config
+    # /station/partage/set/config
+    # - ex: {"partageUuid":"GUID-HERE","partageName":"Mon partage",
+    #       "configuredMaxCurrent":24,"stations":[{"uuid":"{mac-address}",
+    #       "name":"nameHere","ipAddress":"192.168.1.2","configuredMaxCurrent":24,
+    #       "maxCurrent":32}]}
     # /station/update (POST)
     # /station/schedule/high/activate (POST)
     # /station/set/automatic (POST)
     # /station/control/stop
     # /station/control/start
+    # /station/control/partage (POST)
+    #    - ex: {" stationNumber": 1, "current":48.0}
 
     # 65: not plugged in, waiting
     # 66: plugged in, waiting
@@ -78,6 +91,7 @@ class TechnoVE:
             TechnoVEConnectionTimeoutError: A timeout occurred while communicating
                 with the TechnoVE station.
             TechnoVEError: Received an unexpected response from the TechnoVE station.
+
         """
         url = URL.build(scheme="http", host=self.station_ip, port=80, path=uri)
 
@@ -142,6 +156,7 @@ class TechnoVE:
         Returns
         -------
             TechnoVE station data.
+
         """
         data = await self.request("/station/get/info")
         if not data:
@@ -156,6 +171,7 @@ class TechnoVE:
         Args:
         ----
             enabled: True to enable the auto-charge feature, otherwise false.
+
         """
         await self.request(
             "/station/set/automatic", method="POST", data={"activated": enabled}
@@ -173,12 +189,48 @@ class TechnoVE:
         Raises:
         ------
             TechnoVEError: If auto_charge is enabled.
+
         """
         if self.station and self.station.info.auto_charge:
             msg = "Cannot start or stop charging when auto-charge is enabled."
             raise TechnoVEError(msg)
         action = "start" if enabled else "stop"
         await self.request(f"/station/control/{action}")
+
+    async def set_max_current(self, max_current: int) -> None:
+        """Set the max current the station is allowed to provide.
+
+        This can only be set if the sharing mode feature is not enabled.
+
+        Args:
+        ----
+            max_current: The maximum current the station can provide to the vehicle.
+                This value must be between 8 and max_station_current.
+
+        Raises:
+        ------
+            TechnoVEError: If in_sharing_mode is enabled.
+            TechnoVEOutOfBoundError: If max_current is below 8 (See MIN_CURRENT).
+            TechnoVEOutOfBoundError: If max_current is above max_station_current.
+
+        """
+        if self.station and self.station.info.in_sharing_mode:
+            msg = "Cannot set the max current when sharing mode is enabled."
+            raise TechnoVEError(msg)
+        if max_current < MIN_CURRENT:
+            msg = f"Max current needs to be greater than {MIN_CURRENT}."
+            raise TechnoVEOutOfBoundError(msg)
+        if self.station and max_current > self.station.info.max_station_current:
+            msg = (
+                "Max current needs to be equal or lower than "
+                f"{self.station.info.max_station_current}."
+            )
+            raise TechnoVEOutOfBoundError(msg)
+        await self.request(
+            "/station/control/partage",
+            "POST",
+            {" stationNumber": 1, "current": max_current},
+        )
 
     async def close(self) -> None:
         """Close open client session."""
@@ -191,6 +243,7 @@ class TechnoVE:
         Returns
         -------
             The TechnoVE object.
+
         """
         return self
 
@@ -200,5 +253,6 @@ class TechnoVE:
         Args:
         ----
             _exc_info: Exec type.
+
         """
         await self.close()

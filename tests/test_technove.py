@@ -7,7 +7,11 @@ import pytest
 from aresponses import Response, ResponsesMockServer
 
 from technove import Station, Status, TechnoVE
-from technove.exceptions import TechnoVEConnectionError, TechnoVEError
+from technove.exceptions import (
+    TechnoVEConnectionError,
+    TechnoVEError,
+    TechnoVEOutOfBoundError,
+)
 
 
 @pytest.mark.asyncio
@@ -292,3 +296,50 @@ async def test_set_charging_enabled_auto_charge() -> None:
     technove.station = Station({"auto_charge": True})
     with pytest.raises(TechnoVEError):
         await technove.set_charging_enabled(enabled=True)
+
+
+@pytest.mark.asyncio
+async def test_set_max_current(aresponses: ResponsesMockServer) -> None:
+    """Test that changing set_max_current calls the right API."""
+    aresponses.add(
+        "example.com",
+        "/station/control/partage",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "plain/text"},
+            text="ok",
+        ),
+    )
+    async with aiohttp.ClientSession() as session:
+        technove = TechnoVE("example.com", session=session)
+        technove.station = Station({"maxStationCurrent": 32, "in_sharing_mode": False})
+        await technove.set_max_current(32)
+        aresponses.assert_plan_strictly_followed()
+
+
+@pytest.mark.asyncio
+async def test_set_max_current_sharing_mode() -> None:
+    """Test failure when setting the max current and in_sharing_mode is enabled."""
+    technove = TechnoVE("example.com")
+    technove.station = Station({"maxStationCurrent": 32, "in_sharing_mode": True})
+    with pytest.raises(TechnoVEError):
+        await technove.set_max_current(32)
+
+
+@pytest.mark.asyncio
+async def test_set_max_current_too_low() -> None:
+    """Test failure when setting the max current below 8."""
+    technove = TechnoVE("example.com")
+    technove.station = Station({"maxStationCurrent": 32, "in_sharing_mode": False})
+    with pytest.raises(TechnoVEOutOfBoundError):
+        await technove.set_max_current(2)
+
+
+@pytest.mark.asyncio
+async def test_set_max_current_too_high() -> None:
+    """Test failure when setting the max current below 0."""
+    technove = TechnoVE("example.com")
+    technove.station = Station({"maxStationCurrent": 32, "in_sharing_mode": False})
+    with pytest.raises(TechnoVEOutOfBoundError):
+        await technove.set_max_current(48)
