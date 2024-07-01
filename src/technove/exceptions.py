@@ -5,6 +5,10 @@ class TechnoVEError(Exception):
     """Generic TechnoVE exception."""
 
 
+class TechnoVEOutOfBoundError(TechnoVEError):
+    """Generic TechnoVE exception."""
+
+
 class TechnoVEConnectionError(Exception):
     """TechnoVE connection exception."""
 

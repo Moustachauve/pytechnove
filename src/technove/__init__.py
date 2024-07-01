@@ -6,13 +6,14 @@ from .exceptions import (
     TechnoVEError,
 )
 from .models import Info, Station, Status
-from .technove import TechnoVE
+from .technove import MIN_CURRENT, TechnoVE
 
 __all__ = [
     "Station",
     "Status",
     "Info",
     "TechnoVE",
+    "MIN_CURRENT",
     "TechnoVEConnectionError",
     "TechnoVEConnectionTimeoutError",
     "TechnoVEError",
