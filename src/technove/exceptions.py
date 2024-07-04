@@ -6,7 +6,7 @@ class TechnoVEError(Exception):
 
 
 class TechnoVEOutOfBoundError(TechnoVEError):
-    """Generic TechnoVE exception."""
+    """TechnoVE exception when trying to set values out of bounds."""
 
 
 class TechnoVEConnectionError(Exception):
