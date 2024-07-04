@@ -9,7 +9,7 @@ class TechnoVEOutOfBoundError(TechnoVEError):
     """TechnoVE exception when trying to set values out of bounds."""
 
 
-class TechnoVEConnectionError(Exception):
+class TechnoVEConnectionError(TechnoVEError):
     """TechnoVE connection exception."""
 
 
