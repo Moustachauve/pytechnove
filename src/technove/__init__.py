@@ -4,6 +4,7 @@ from .exceptions import (
     TechnoVEConnectionError,
     TechnoVEConnectionTimeoutError,
     TechnoVEError,
+    TechnoVEOutOfBoundError,
 )
 from .models import Info, Station, Status
 from .technove import MIN_CURRENT, TechnoVE
@@ -17,4 +18,5 @@ __all__ = [
     "TechnoVEConnectionError",
     "TechnoVEConnectionTimeoutError",
     "TechnoVEError",
+    "TechnoVEOutOfBoundError",
 ]
