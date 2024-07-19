@@ -34,31 +34,6 @@ class TechnoVE:
     _close_session: bool = False
     station: Station | None = None
 
-    # /station/get/info
-    # /station/get/statistic
-    # /station/get/current/correcting/ratio
-    # /station/get/ntp/server
-    # /station/network/get/logs
-    # /station/network/list
-    # /station/get/schedule
-    # /station/partage/get/config
-    # /station/partage/set/config
-    # - ex: {"partageUuid":"GUID-HERE","partageName":"Mon partage",
-    #       "configuredMaxCurrent":24,"stations":[{"uuid":"{mac-address}",
-    #       "name":"nameHere","ipAddress":"192.168.1.2","configuredMaxCurrent":24,
-    #       "maxCurrent":32}]}
-    # /station/update (POST)
-    # /station/schedule/high/activate (POST)
-    # /station/set/automatic (POST)
-    # /station/control/stop
-    # /station/control/start
-    # /station/control/partage (POST)
-    #    - ex: {" stationNumber": 1, "current":48.0}
-
-    # 65: not plugged in, waiting
-    # 66: plugged in, waiting
-    # 67: plugged in, charging
-
     @backoff.on_exception(
         backoff.expo, TechnoVEConnectionError, max_tries=3, logger=None
     )
