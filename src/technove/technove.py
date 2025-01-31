@@ -216,7 +216,11 @@ class TechnoVE:
 
         """
         await self.request(
-            "/station/schedule/high/activate", method="POST", data={"activated": enabled}
+            "/station/schedule/high/activate",
+            method="POST",
+            data={
+                "activated": enabled
+            }
         )
 
     async def close(self) -> None:
