@@ -355,6 +355,7 @@ async def test_set_max_current_too_high() -> None:
     with pytest.raises(TechnoVEOutOfBoundError):
         await technove.set_max_current(48)
 
+
 @pytest.mark.asyncio
 async def test_set_high_rate_schedule(aresponses: ResponsesMockServer) -> None:
     """Test that enabling high rate schedule calls the right API."""
