@@ -354,3 +354,22 @@ async def test_set_max_current_too_high() -> None:
     technove.station = Station({"maxStationCurrent": 32, "inSharingMode": False})
     with pytest.raises(TechnoVEOutOfBoundError):
         await technove.set_max_current(48)
+
+
+@pytest.mark.asyncio
+async def test_set_high_rate_schedule(aresponses: ResponsesMockServer) -> None:
+    """Test that enabling high rate schedule calls the right API."""
+    aresponses.add(
+        "example.com",
+        "/station/schedule/high/activate",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "plain/text"},
+            text="ok",
+        ),
+    )
+    async with aiohttp.ClientSession() as session:
+        technove = TechnoVE("example.com", session=session)
+        await technove.set_high_rate_schedule(enabled=True)
+        aresponses.assert_plan_strictly_followed()

@@ -207,6 +207,20 @@ class TechnoVE:
             {" stationNumber": 1, "current": max_current},
         )
 
+    async def set_high_rate_schedule(self, *, enabled: bool) -> None:
+        """Set whether the high rate schedule is enabled or disabled.
+
+        Args:
+        ----
+            enabled: True to enable the high rate schedule, otherwise false.
+
+        """
+        await self.request(
+            "/station/schedule/high/activate",
+            method="POST",
+            data={"activated": enabled},
+        )
+
     async def close(self) -> None:
         """Close open client session."""
         if self.session and self._close_session:
