@@ -36,7 +36,7 @@ yarl = ">=1.6.0"
 "Bug Tracker" = "https://github.com/Moustachauve/pytechnove/issues"
 Changelog = "https://github.com/Moustachauve/pytechnove/releases"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 aresponses = "2.1.6"
 codespell = "2.2.6"
 covdefaults = "2.3.0"
