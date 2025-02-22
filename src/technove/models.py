@@ -14,7 +14,7 @@ class Status(Enum):
     PLUGGED_WAITING = "plugged_waiting"
     PLUGGED_CHARGING = "plugged_charging"
     OUT_OF_ACTIVATION_PERIOD = "out_of_activation_period"
-    HIGH_CHARGE_PERIOD = "high_charge_period"
+    HIGH_TARIFF_PERIOD = "high_tariff_period"
 
     @classmethod
     def build(cls: type[Status], status: int) -> Status:
@@ -25,7 +25,7 @@ class Status(Enum):
             66: Status.PLUGGED_WAITING,
             67: Status.PLUGGED_CHARGING,
             83: Status.OUT_OF_ACTIVATION_PERIOD,
-            84: Status.HIGH_CHARGE_PERIOD,
+            84: Status.HIGH_TARIFF_PERIOD,
         }
 
         if status in statuses:
@@ -74,7 +74,7 @@ class Info:  # pylint: disable=too-many-instance-attributes
     current: int
     energy_session: float
     energy_total: int
-    high_charge_period_active: bool
+    high_tariff_period_active: bool
     mac_address: str
     in_sharing_mode: bool
     is_battery_protected: bool
@@ -113,7 +113,7 @@ class Info:  # pylint: disable=too-many-instance-attributes
             current=data.get("current", 0),
             energy_session=data.get("energySession", 0),
             energy_total=data.get("energyTotal", 0),
-            high_charge_period_active=data.get("highChargePeriodActive", False),
+            high_tariff_period_active=data.get("highChargePeriodActive", False),
             mac_address=data.get("id", "unknown"),
             in_sharing_mode=data.get("inSharingMode", False),
             is_battery_protected=data.get("isBatteryProtected", False),
