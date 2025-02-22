@@ -207,12 +207,12 @@ class TechnoVE:
             {" stationNumber": 1, "current": max_current},
         )
 
-    async def set_high_rate_schedule(self, *, enabled: bool) -> None:
-        """Set whether the high rate schedule is enabled or disabled.
+    async def set_high_tariff_schedule(self, *, enabled: bool) -> None:
+        """Set whether the high tariff schedule is enabled or disabled.
 
         Args:
         ----
-            enabled: True to enable the high rate schedule, otherwise false.
+            enabled: True to enable the high tariff schedule, otherwise false.
 
         """
         await self.request(

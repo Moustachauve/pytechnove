@@ -357,8 +357,8 @@ async def test_set_max_current_too_high() -> None:
 
 
 @pytest.mark.asyncio
-async def test_set_high_rate_schedule(aresponses: ResponsesMockServer) -> None:
-    """Test that enabling high rate schedule calls the right API."""
+async def test_set_high_tariff_schedule(aresponses: ResponsesMockServer) -> None:
+    """Test that enabling high tariff schedule calls the right API."""
     aresponses.add(
         "example.com",
         "/station/schedule/high/activate",
@@ -371,5 +371,5 @@ async def test_set_high_rate_schedule(aresponses: ResponsesMockServer) -> None:
     )
     async with aiohttp.ClientSession() as session:
         technove = TechnoVE("example.com", session=session)
-        await technove.set_high_rate_schedule(enabled=True)
+        await technove.set_high_tariff_schedule(enabled=True)
         aresponses.assert_plan_strictly_followed()
