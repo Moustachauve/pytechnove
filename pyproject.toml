@@ -7,6 +7,7 @@ classifiers = [
   "Natural Language :: English",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3",
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
@@ -36,7 +37,7 @@ yarl = ">=1.6.0"
 "Bug Tracker" = "https://github.com/Moustachauve/pytechnove/issues"
 Changelog = "https://github.com/Moustachauve/pytechnove/releases"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 aresponses = "2.1.6"
 codespell = "2.2.6"
 covdefaults = "2.3.0"
