@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  DEFAULT_PYTHON: "3.13"
+  DEFAULT_PYTHON: "3.11"
 
 jobs:
   pytest:
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: ["3.13"]
+        python: ["3.11", "3.12", "3.13"]
     steps:
       - name: ⤵️ Check out code from GitHub
         uses: actions/checkout@v4.2.2
@@ -37,7 +37,7 @@ jobs:
       - name: 🚀 Run pytest
         run: poetry run pytest --cov technove tests
       - name: ⬆️ Upload coverage artifact
-        uses: actions/upload-artifact@v4.6.1
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: coverage-${{ matrix.python }}
           path: .coverage
