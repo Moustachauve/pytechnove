@@ -67,9 +67,12 @@ jobs:
       - name: 🏗 Install dependencies
         run: poetry install --no-interaction
       - name: 🚀 Process coverage results
-        run: |
-          poetry run coverage combine coverage*/.coverage*
-          poetry run coverage xml -i
+        run: poetry run coverage xml -i
+        # TODO: this stopped working at some point:
+        # Couldn't combine from non-existent path 'coverage*/.coverage*'
+        # run: |
+        #   poetry run coverage combine coverage*/.coverage*
+        #   poetry run coverage xml -i
       - name: 🚀 Upload coverage report
         uses: codecov/codecov-action@v5.3.1
         # TODO: SonarCloud support
