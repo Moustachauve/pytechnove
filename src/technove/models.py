@@ -13,6 +13,7 @@ class Status(Enum):
     UNPLUGGED = "unplugged"
     PLUGGED_WAITING = "plugged_waiting"
     PLUGGED_CHARGING = "plugged_charging"
+    GROUND_FAULT = "ground_fault"
     OUT_OF_ACTIVATION_PERIOD = "out_of_activation_period"
     HIGH_TARIFF_PERIOD = "high_tariff_period"
 
@@ -24,6 +25,7 @@ class Status(Enum):
             65: Status.UNPLUGGED,
             66: Status.PLUGGED_WAITING,
             67: Status.PLUGGED_CHARGING,
+            72: Status.GROUND_FAULT,
             83: Status.OUT_OF_ACTIVATION_PERIOD,
             84: Status.HIGH_TARIFF_PERIOD,
         }
