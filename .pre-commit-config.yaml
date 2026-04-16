@@ -123,4 +123,3 @@ repos:
         language: system
         types: [yaml]
         entry: poetry run yamllint
-

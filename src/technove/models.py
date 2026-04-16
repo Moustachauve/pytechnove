@@ -1,4 +1,5 @@
 """Models for TechnoVE."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -18,7 +19,7 @@ class Status(Enum):
     HIGH_TARIFF_PERIOD = "high_tariff_period"
 
     @classmethod
-    def build(cls: type[Status], status: int) -> Status:
+    def build(cls: type[Status], status: int | None) -> Status:
         """Parse the status code int to a Status object."""
         statuses = {
             None: Status.UNKNOWN,
@@ -47,6 +48,7 @@ class Station:
         Args:
         ----
             data: The full API response from a TechnoVE station.
+
         """
         self.update_from_dict(data)
 
@@ -61,6 +63,7 @@ class Station:
         Returns:
         -------
             The updated Station object.
+
         """
         self.info = Info.from_dict(data)
 
@@ -108,6 +111,7 @@ class Info:  # pylint: disable=too-many-instance-attributes
         Returns:
         -------
             A station info object.
+
         """
         return Info(
             auto_charge=data.get("auto_charge", False),
@@ -130,7 +134,7 @@ class Info:  # pylint: disable=too-many-instance-attributes
             network_ssid=data.get("network_ssid", "Unknown"),
             normal_period_active=data.get("normalPeriodActive", False),
             rssi=data.get("rssi", 0),
-            status=Status.build(data.get("status", None)),
+            status=Status.build(data.get("status")),
             time=data.get("time", 0),
             version=data.get("version", "Unknown"),
             voltage_in=data.get("voltageIn", 0),

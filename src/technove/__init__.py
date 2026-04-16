@@ -10,11 +10,11 @@ from .models import Info, Station, Status
 from .technove import MIN_CURRENT, TechnoVE
 
 __all__ = [
+    "MIN_CURRENT",
+    "Info",
     "Station",
     "Status",
-    "Info",
     "TechnoVE",
-    "MIN_CURRENT",
     "TechnoVEConnectionError",
     "TechnoVEConnectionTimeoutError",
     "TechnoVEError",
