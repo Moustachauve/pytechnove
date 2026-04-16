@@ -20,12 +20,12 @@ This is originally meant to be integrated into Home Assistant, but can be used a
 ```python
 import asyncio
 
-from technove import TecnnoVE
+from technove import TechnoVE
 
 
 async def main() -> None:
-    """Show example on controlling your TecnnoVE station."""
-    async with WLED("192.168.1.10") as technove:
+    """Show example on controlling your TechnoVE station."""
+    async with TechnoVE("192.168.1.10") as technove:
         station = await technove.update()
         print(station.info.version)
 

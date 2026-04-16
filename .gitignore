@@ -136,3 +136,6 @@ dmypy.json
 
 # Dependency directories
 node_modules/
+uv.lock
+.ruff_cache/
+
