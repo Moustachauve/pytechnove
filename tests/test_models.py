@@ -55,3 +55,8 @@ def test_status_build_unknown_string() -> None:
 def test_status_build_none() -> None:
     """None returns UNKNOWN."""
     assert Status.build(None) == Status.UNKNOWN
+
+
+def test_status_build_unhashable_type() -> None:
+    """An unhashable malformed value returns UNKNOWN without raising."""
+    assert Status.build(["A"]) == Status.UNKNOWN

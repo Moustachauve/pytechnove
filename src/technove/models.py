@@ -40,7 +40,7 @@ class Status(Enum):
     HIGH_TARIFF_PERIOD = "high_tariff_period"
 
     @classmethod
-    def build(cls: type[Status], status: str | int | None) -> Status:
+    def build(cls: type[Status], status: Any) -> Status:
         """Parse a status value from the TechnoVE API into a Status object.
 
         The API returns the status as a single ASCII character string (e.g. 'A',
@@ -58,28 +58,27 @@ class Status(Enum):
             values.
 
         """
-        # Normalise a single-character string to its ordinal so that callers
-        # can pass either the raw API string ('A') or an integer (65).
-        code: int | None
         if isinstance(status, str):
             code = ord(status) if len(status) == 1 else None
-        else:
+        elif isinstance(status, int):
             code = status
+        else:
+            code = None
 
-        statuses: dict[int | None, Status] = {
-            None: Status.UNKNOWN,
-            ord("A"): Status.UNPLUGGED,  # 65
-            ord("B"): Status.PLUGGED_WAITING,  # 66
-            ord("C"): Status.PLUGGED_CHARGING,  # 67
-            ord("D"): Status.VENTILATION_REQUIRED,  # 68
-            ord("E"): Status.PILOT_FAULT,  # 69
-            ord("F"): Status.EVSE_FAULT,  # 70
-            ord("H"): Status.GROUND_FAULT,  # 72
-            ord("S"): Status.OUT_OF_ACTIVATION_PERIOD,  # 83
-            ord("T"): Status.HIGH_TARIFF_PERIOD,  # 84
-        }
+        return _STATUS_MAP.get(code, cls.UNKNOWN)
 
-        return statuses.get(code, Status.UNKNOWN)
+
+_STATUS_MAP: dict[int | None, Status] = {
+    ord("A"): Status.UNPLUGGED,  # 65
+    ord("B"): Status.PLUGGED_WAITING,  # 66
+    ord("C"): Status.PLUGGED_CHARGING,  # 67
+    ord("D"): Status.VENTILATION_REQUIRED,  # 68
+    ord("E"): Status.PILOT_FAULT,  # 69
+    ord("F"): Status.EVSE_FAULT,  # 70
+    ord("H"): Status.GROUND_FAULT,  # 72
+    ord("S"): Status.OUT_OF_ACTIVATION_PERIOD,  # 83
+    ord("T"): Status.HIGH_TARIFF_PERIOD,  # 84
+}
 
 
 class Station:
@@ -160,11 +159,13 @@ class Info:  # pylint: disable=too-many-instance-attributes
         """
         return Info(
             auto_charge=data.get("auto_charge", False),
-            conflict_in_sharing_config=data.get("conflictInSharingConfig", False),
+            conflict_in_sharing_config=data.get(
+                "conflictInSharingConfig", False),
             current=data.get("current", 0),
             energy_session=data.get("energySession", 0),
             energy_total=data.get("energyTotal", 0),
-            high_tariff_period_active=data.get("highChargePeriodActive", False),
+            high_tariff_period_active=data.get(
+                "highChargePeriodActive", False),
             mac_address=data.get("id", "unknown"),
             in_sharing_mode=data.get("inSharingMode", False),
             is_battery_protected=data.get("isBatteryProtected", False),
