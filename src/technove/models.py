@@ -40,7 +40,7 @@ class Status(Enum):
     HIGH_TARIFF_PERIOD = "high_tariff_period"
 
     @classmethod
-    def build(cls: type[Status], status: Any) -> Status:
+    def build(cls: type[Status], status: Any | None) -> Status:
         """Parse a status value from the TechnoVE API into a Status object.
 
         The API returns the status as a single ASCII character string (e.g. 'A',
@@ -159,13 +159,11 @@ class Info:  # pylint: disable=too-many-instance-attributes
         """
         return Info(
             auto_charge=data.get("auto_charge", False),
-            conflict_in_sharing_config=data.get(
-                "conflictInSharingConfig", False),
+            conflict_in_sharing_config=data.get("conflictInSharingConfig", False),
             current=data.get("current", 0),
             energy_session=data.get("energySession", 0),
             energy_total=data.get("energyTotal", 0),
-            high_tariff_period_active=data.get(
-                "highChargePeriodActive", False),
+            high_tariff_period_active=data.get("highChargePeriodActive", False),
             mac_address=data.get("id", "unknown"),
             in_sharing_mode=data.get("inSharingMode", False),
             is_battery_protected=data.get("isBatteryProtected", False),
