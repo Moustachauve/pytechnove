@@ -1,6 +1,5 @@
 """Tests for `technove.TechnoVE`."""
 
-
 from technove import Status
 
 

@@ -138,4 +138,3 @@ dmypy.json
 node_modules/
 uv.lock
 .ruff_cache/
-
