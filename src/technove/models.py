@@ -8,33 +8,77 @@ from typing import Any
 
 
 class Status(Enum):
-    """Describes the status of a TechnoVE station."""
+    """Describes the status of a TechnoVE station.
+
+    Values map to SAE J1772 Control Pilot states and TechnoVE custom states.
+    The raw API value is an ASCII character (e.g. 'A', 'B', 'C') whose ordinal
+    integer represents the state code.
+
+    Standard SAE J1772 states:
+        A (65)  - No vehicle connected (unplugged / standby)
+        B (66)  - Vehicle detected, not ready to charge (plugged, waiting)
+        C (67)  - Charging in progress
+        D (68)  - Charging with ventilation required
+        E (69)  - Pilot fault (EVSE error)
+        F (70)  - EVSE fault (not available)
+
+    TechnoVE custom states:
+        H (72)  - Ground fault detected
+        S (83)  - Out of activation period
+        T (84)  - High-tariff period active
+    """
 
     UNKNOWN = None
     UNPLUGGED = "unplugged"
     PLUGGED_WAITING = "plugged_waiting"
     PLUGGED_CHARGING = "plugged_charging"
+    VENTILATION_REQUIRED = "ventilation_required"
+    PILOT_FAULT = "pilot_fault"
+    EVSE_FAULT = "evse_fault"
     GROUND_FAULT = "ground_fault"
     OUT_OF_ACTIVATION_PERIOD = "out_of_activation_period"
     HIGH_TARIFF_PERIOD = "high_tariff_period"
 
     @classmethod
-    def build(cls: type[Status], status: int | None) -> Status:
-        """Parse the status code int to a Status object."""
-        statuses = {
-            None: Status.UNKNOWN,
-            65: Status.UNPLUGGED,
-            66: Status.PLUGGED_WAITING,
-            67: Status.PLUGGED_CHARGING,
-            72: Status.GROUND_FAULT,
-            83: Status.OUT_OF_ACTIVATION_PERIOD,
-            84: Status.HIGH_TARIFF_PERIOD,
-        }
+    def build(cls: type[Status], status: Any | None) -> Status:
+        """Parse a status value from the TechnoVE API into a Status object.
 
-        if status in statuses:
-            return statuses[status]
+        The API returns the status as a single ASCII character string (e.g. 'A',
+        'B', 'C'). This method accepts either the raw character string or its
+        integer ordinal equivalent.
 
-        return Status.UNKNOWN
+        Args:
+        ----
+            status: The raw status value from the API. May be a single-character
+                string, an integer ordinal, or None.
+
+        Returns:
+        -------
+            The matching Status enum member, or Status.UNKNOWN for unrecognised
+            values.
+
+        """
+        if isinstance(status, str):
+            code = ord(status) if len(status) == 1 else None
+        elif isinstance(status, int):
+            code = status
+        else:
+            code = None
+
+        return _STATUS_MAP.get(code, cls.UNKNOWN)
+
+
+_STATUS_MAP: dict[int | None, Status] = {
+    ord("A"): Status.UNPLUGGED,  # 65
+    ord("B"): Status.PLUGGED_WAITING,  # 66
+    ord("C"): Status.PLUGGED_CHARGING,  # 67
+    ord("D"): Status.VENTILATION_REQUIRED,  # 68
+    ord("E"): Status.PILOT_FAULT,  # 69
+    ord("F"): Status.EVSE_FAULT,  # 70
+    ord("H"): Status.GROUND_FAULT,  # 72
+    ord("S"): Status.OUT_OF_ACTIVATION_PERIOD,  # 83
+    ord("T"): Status.HIGH_TARIFF_PERIOD,  # 84
+}
 
 
 class Station:
