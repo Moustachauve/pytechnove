@@ -69,6 +69,9 @@ class Status(Enum):
             ord("T"): Status.HIGH_TARIFF_PERIOD,  # 84
         }
 
+        if not isinstance(status, int) and status is not None:
+            return Status.UNKNOWN
+
         return statuses.get(status, Status.UNKNOWN)
 
 

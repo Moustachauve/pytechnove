@@ -8,8 +8,6 @@ def test_status_build_plugged_charging() -> None:
     assert Status.build(67) == Status.PLUGGED_CHARGING
 
 
-
-
 # ---------------------------------------------------------------------------
 # Edge / fallback cases
 # ---------------------------------------------------------------------------
@@ -20,8 +18,6 @@ def test_status_build_unknown_int() -> None:
     assert Status.build(42) == Status.UNKNOWN
 
 
-
-
 def test_status_build_none() -> None:
     """None returns UNKNOWN."""
     assert Status.build(None) == Status.UNKNOWN
@@ -29,4 +25,4 @@ def test_status_build_none() -> None:
 
 def test_status_build_unhashable_type() -> None:
     """An unhashable malformed value returns UNKNOWN without raising."""
-    assert Status.build(["A"]) == Status.UNKNOWN
+    assert Status.build(["A"]) == Status.UNKNOWN  # type: ignore[arg-type]
