@@ -56,23 +56,24 @@ class Status(Enum):
             values.
 
         """
-        statuses = {
-            None: Status.UNKNOWN,
-            ord("A"): Status.UNPLUGGED,  # 65
-            ord("B"): Status.PLUGGED_WAITING,  # 66
-            ord("C"): Status.PLUGGED_CHARGING,  # 67
-            ord("D"): Status.VENTILATION_REQUIRED,  # 68
-            ord("E"): Status.PILOT_FAULT,  # 69
-            ord("F"): Status.EVSE_FAULT,  # 70
-            ord("H"): Status.GROUND_FAULT,  # 72
-            ord("S"): Status.OUT_OF_ACTIVATION_PERIOD,  # 83
-            ord("T"): Status.HIGH_TARIFF_PERIOD,  # 84
-        }
-
         if not isinstance(status, int) and status is not None:
             return Status.UNKNOWN
 
-        return statuses.get(status, Status.UNKNOWN)
+        return _STATUS_MAP.get(status, Status.UNKNOWN)
+
+
+_STATUS_MAP: dict[int | None, Status] = {
+    None: Status.UNKNOWN,
+    ord("A"): Status.UNPLUGGED,  # 65
+    ord("B"): Status.PLUGGED_WAITING,  # 66
+    ord("C"): Status.PLUGGED_CHARGING,  # 67
+    ord("D"): Status.VENTILATION_REQUIRED,  # 68
+    ord("E"): Status.PILOT_FAULT,  # 69
+    ord("F"): Status.EVSE_FAULT,  # 70
+    ord("H"): Status.GROUND_FAULT,  # 72
+    ord("S"): Status.OUT_OF_ACTIVATION_PERIOD,  # 83
+    ord("T"): Status.HIGH_TARIFF_PERIOD,  # 84
+}
 
 
 class Station:
