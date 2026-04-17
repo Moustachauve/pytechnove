@@ -40,17 +40,15 @@ class Status(Enum):
     HIGH_TARIFF_PERIOD = "high_tariff_period"
 
     @classmethod
-    def build(cls: type[Status], status: Any | None) -> Status:
-        """Parse a status value from the TechnoVE API into a Status object.
+    def build(cls: type[Status], status: int | None) -> Status:
+        """Parse the status code int to a Status object.
 
-        The API returns the status as a single ASCII character string (e.g. 'A',
-        'B', 'C'). This method accepts either the raw character string or its
-        integer ordinal equivalent.
+        The API returns the status as an integer representing the ASCII
+        character ordinal (e.g. 65 for 'A', 66 for 'B').
 
         Args:
         ----
-            status: The raw status value from the API. May be a single-character
-                string, an integer ordinal, or None.
+            status: The raw status integer value from the API, or None.
 
         Returns:
         -------
@@ -58,27 +56,20 @@ class Status(Enum):
             values.
 
         """
-        if isinstance(status, str):
-            code = ord(status) if len(status) == 1 else None
-        elif isinstance(status, int):
-            code = status
-        else:
-            code = None
+        statuses = {
+            None: Status.UNKNOWN,
+            ord("A"): Status.UNPLUGGED,  # 65
+            ord("B"): Status.PLUGGED_WAITING,  # 66
+            ord("C"): Status.PLUGGED_CHARGING,  # 67
+            ord("D"): Status.VENTILATION_REQUIRED,  # 68
+            ord("E"): Status.PILOT_FAULT,  # 69
+            ord("F"): Status.EVSE_FAULT,  # 70
+            ord("H"): Status.GROUND_FAULT,  # 72
+            ord("S"): Status.OUT_OF_ACTIVATION_PERIOD,  # 83
+            ord("T"): Status.HIGH_TARIFF_PERIOD,  # 84
+        }
 
-        return _STATUS_MAP.get(code, cls.UNKNOWN)
-
-
-_STATUS_MAP: dict[int | None, Status] = {
-    ord("A"): Status.UNPLUGGED,  # 65
-    ord("B"): Status.PLUGGED_WAITING,  # 66
-    ord("C"): Status.PLUGGED_CHARGING,  # 67
-    ord("D"): Status.VENTILATION_REQUIRED,  # 68
-    ord("E"): Status.PILOT_FAULT,  # 69
-    ord("F"): Status.EVSE_FAULT,  # 70
-    ord("H"): Status.GROUND_FAULT,  # 72
-    ord("S"): Status.OUT_OF_ACTIVATION_PERIOD,  # 83
-    ord("T"): Status.HIGH_TARIFF_PERIOD,  # 84
-}
+        return statuses.get(status, Status.UNKNOWN)
 
 
 class Station:
