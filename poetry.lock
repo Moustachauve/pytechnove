@@ -252,18 +252,6 @@ files = [
 ]
 
 [[package]]
-name = "backoff"
-version = "2.2.1"
-description = "Function decoration for backoff and retry"
-optional = false
-python-versions = ">=3.7,<4.0"
-groups = ["main"]
-files = [
-    {file = "backoff-2.2.1-py3-none-any.whl", hash = "sha256:63579f9a0628e06278f7e47b7d7d5b6ce20dc65c5e96a6f3ca99a6adca0396e8"},
-    {file = "backoff-2.2.1.tar.gz", hash = "sha256:03f829f5bb1923180821643f8753b0502c3b682293992485b0eef2807afa5cba"},
-]
-
-[[package]]
 name = "cachetools"
 version = "5.5.2"
 description = "Extensible memoizing collections and decorators"
@@ -1983,6 +1971,18 @@ pytest = ">=7"
 testing = ["process-tests", "pytest-xdist", "virtualenv"]
 
 [[package]]
+name = "python-backoff"
+version = "2.4.0"
+description = "Function decoration for backoff and retry"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "python_backoff-2.4.0-py3-none-any.whl", hash = "sha256:bdd6cb29bd2c4577999a630e137e730f6270989dad0b535e43fe3b7c3a16c0f1"},
+    {file = "python_backoff-2.4.0.tar.gz", hash = "sha256:e01ecdf46e8beed22cd7757df1148c4e03922be7983b3882f01866fe111386d2"},
+]
+
+[[package]]
 name = "pyyaml"
 version = "6.0.2"
 description = "YAML parser and emitter for Python"
@@ -2647,4 +2647,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "a90ef5d8be579c0606a909f6b71f28d6bda4891177f577ef393ee63c2a2352d4"
+content-hash = "0c0afeeb846637cfb2bde86aee8527fc77086790b80f3cd498d2a1c7c83458f0"
