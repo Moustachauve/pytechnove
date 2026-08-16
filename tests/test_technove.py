@@ -373,3 +373,47 @@ async def test_set_high_tariff_schedule(aresponses: ResponsesMockServer) -> None
         technove = TechnoVE("example.com", session=session)
         await technove.set_high_tariff_schedule(enabled=True)
         aresponses.assert_plan_strictly_followed()
+
+
+@pytest.mark.asyncio
+async def test_set_charging_enabled_no_station(
+    aresponses: ResponsesMockServer,
+) -> None:
+    """Test set_charging_enabled sends command directly when station is None."""
+    aresponses.add(
+        "example.com",
+        "/station/control/start",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "plain/text"},
+            text="ok",
+        ),
+    )
+    async with aiohttp.ClientSession() as session:
+        technove = TechnoVE("example.com", session=session)
+        assert technove.station is None
+        await technove.set_charging_enabled(enabled=True)
+        aresponses.assert_plan_strictly_followed()
+
+
+@pytest.mark.asyncio
+async def test_set_max_current_no_station(
+    aresponses: ResponsesMockServer,
+) -> None:
+    """Test set_max_current sends command directly when station is None."""
+    aresponses.add(
+        "example.com",
+        "/station/control/partage",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "plain/text"},
+            text="ok",
+        ),
+    )
+    async with aiohttp.ClientSession() as session:
+        technove = TechnoVE("example.com", session=session)
+        assert technove.station is None
+        await technove.set_max_current(32)
+        aresponses.assert_plan_strictly_followed()

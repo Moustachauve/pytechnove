@@ -1,6 +1,30 @@
 """Tests for `technove.models.Status`."""
 
-from technove import Status
+from dataclasses import FrozenInstanceError
+
+import pytest
+
+from technove import Station, Status
+
+
+def test_station_repr() -> None:
+    """Test Station __repr__ formatting."""
+    station = Station({"name": "TestStation", "version": "1.0"})
+    assert repr(station) == f"Station(info={station.info!r})"
+
+
+def test_station_slots() -> None:
+    """Test that Station uses __slots__ and prevents dynamic attributes."""
+    station = Station({"name": "TestStation"})
+    with pytest.raises(AttributeError):
+        setattr(station, "dynamic_attr", "not_allowed")  # noqa: B010
+
+
+def test_info_frozen() -> None:
+    """Test that Info dataclass is immutable."""
+    station = Station({"name": "TestStation"})
+    with pytest.raises(FrozenInstanceError):
+        setattr(station.info, "name", "Modified")  # noqa: B010
 
 
 def test_status_build_plugged_charging() -> None:
