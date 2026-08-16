@@ -79,6 +79,8 @@ _STATUS_MAP: dict[int | None, Status] = {
 class Station:
     """Object holding all information from a TechnoVE Station."""
 
+    __slots__ = ("info",)
+
     info: Info
 
     def __init__(self, data: dict[str, Any]) -> None:
@@ -90,6 +92,10 @@ class Station:
 
         """
         self.update_from_dict(data)
+
+    def __repr__(self) -> str:
+        """Return a string representation of the Station."""
+        return f"Station(info={self.info!r})"
 
     def update_from_dict(self, data: dict[str, Any]) -> Station:
         """Return Station object from TechnoVE API response.
@@ -109,7 +115,7 @@ class Station:
         return self
 
 
-@dataclass
+@dataclass(frozen=True, slots=True)
 class Info:  # pylint: disable=too-many-instance-attributes
     """Object holding information from a TechnoVE Station."""
 
