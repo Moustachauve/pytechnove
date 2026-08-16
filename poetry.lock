@@ -340,33 +340,6 @@ cryptography = "*"
 joserfc = ">=1.6.0"
 
 [[package]]
-name = "awesomeversion"
-version = "25.8.0"
-description = "One version package to rule them all, One version package to find them, One version package to bring them all, and in the darkness bind them."
-optional = false
-python-versions = ">=3.9"
-groups = ["main"]
-files = [
-    {file = "awesomeversion-25.8.0-py3-none-any.whl", hash = "sha256:1c314683abfcc3e26c62af9e609b585bbcbf2ec19568df2f60ff1034fb1dae28"},
-    {file = "awesomeversion-25.8.0.tar.gz", hash = "sha256:e6cd08c90292a11f30b8de401863dcde7bc66a671d8173f9066ebd15d9310453"},
-]
-
-[package.extras]
-dev = ["black (>=25.1)", "isort (>=6.0.1)", "mypy (>=1.16)", "pylint (>=3.3.7)", "pytest (>=8.4.1)", "pytest-codspeed (>=3.2.0)", "pytest-cov (>=6.2.1)", "pytest-snapshot (>=0.9.0)", "pytest-timeout (>=2.4.0)"]
-
-[[package]]
-name = "cachetools"
-version = "7.1.7"
-description = "Extensible memoizing collections and decorators"
-optional = false
-python-versions = ">=3.10"
-groups = ["main"]
-files = [
-    {file = "cachetools-7.1.7-py3-none-any.whl", hash = "sha256:ef98ef375ad188819ef2f9b3645e3987f4b8c5b7550e436ad998c2de78296df0"},
-    {file = "cachetools-7.1.7.tar.gz", hash = "sha256:a3e2a00b14d8f8a6b70c1dae7b4685e7ad3bc965c5b42124a2d6ce895da6cf50"},
-]
-
-[[package]]
 name = "certifi"
 version = "2026.7.22"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -2664,18 +2637,6 @@ rich = ">=13.8.0"
 shellingham = ">=1.3.0"
 
 [[package]]
-name = "types-cachetools"
-version = "7.0.0.20260713"
-description = "Typing stubs for cachetools"
-optional = false
-python-versions = ">=3.10"
-groups = ["dev"]
-files = [
-    {file = "types_cachetools-7.0.0.20260713-py3-none-any.whl", hash = "sha256:6db9bcc7a3840d39e91c04117d85a9d0937eacc9d14d12a873e2b01a2d24a71d"},
-    {file = "types_cachetools-7.0.0.20260713.tar.gz", hash = "sha256:f1acf079e9c66a81e096a897ef0b261a82117cf856834e37b4bd0c9a116a076a"},
-]
-
-[[package]]
 name = "typing-extensions"
 version = "4.16.0"
 description = "Backported and Experimental Type Hints for Python 3.9+"
@@ -2862,4 +2823,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "0c49d3a28dcbc4da8d0f116e0570c75de8cb8d62a0eec52897ddeff6619a7309"
+content-hash = "ae007287291fb6c37d71cde03b13592642a692d067a9f5ff4f9316459351e2aa"
