@@ -21,8 +21,9 @@ def test_station_slots() -> None:
 
 
 def test_info_frozen() -> None:
-    """Test that Info dataclass is immutable."""
+    """Test that Info dataclass is immutable and uses slots."""
     station = Station({"name": "TestStation"})
+    assert not hasattr(station.info, "__dict__")
     with pytest.raises(FrozenInstanceError):
         setattr(station.info, "name", "Modified")  # noqa: B010
 
