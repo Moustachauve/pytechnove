@@ -117,13 +117,26 @@ class Station:
 
 @dataclass(frozen=True, slots=True)
 class Info:  # pylint: disable=too-many-instance-attributes
-    """Object holding information from a TechnoVE Station."""
+    """Object holding information from a TechnoVE Station.
+
+    Several telemetry fields (`current`, `energy_session`, `energy_total`,
+    `voltage_in`, `voltage_out`) are serialized by the station firmware as
+    floating-point numbers (with exact integers omitting `.0` in JSON).
+
+    Firmware boolean semantics for potentially ambiguous fields:
+        is_up_to_date: True when the station clock is synchronized with NTP
+            (unrelated to firmware updates).
+        high_tariff_period_active: True when the high-tariff schedule is
+            enabled, not whether a high-tariff window is currently active.
+        normal_period_active: True when the normal activation schedule is
+            enabled, not whether an activation window is currently active.
+    """
 
     auto_charge: bool
     conflict_in_sharing_config: bool
-    current: int
+    current: float
     energy_session: float
-    energy_total: int
+    energy_total: float
     high_tariff_period_active: bool
     mac_address: str
     in_sharing_mode: bool
@@ -142,8 +155,8 @@ class Info:  # pylint: disable=too-many-instance-attributes
     status: Status
     time: int
     version: str
-    voltage_in: int
-    voltage_out: int
+    voltage_in: float
+    voltage_out: float
 
     @staticmethod
     def from_dict(data: dict[str, Any]) -> Info:
