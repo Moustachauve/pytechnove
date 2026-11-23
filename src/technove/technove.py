@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import json
 from dataclasses import dataclass
 from typing import Any, Final, Self
@@ -87,22 +88,18 @@ class TechnoVE:
                     headers=headers,
                 )
 
-            content_type = response.headers.get("Content-Type", "")
             if response.status // 100 in [4, 5]:
                 contents = await response.read()
                 response.close()
 
-                if content_type == "application/json":
-                    raise TechnoVEError(
-                        response.status,
-                        json.loads(contents.decode("utf8")),
-                    )
-                raise TechnoVEError(
-                    response.status,
-                    {"message": contents.decode("utf8")},
-                )
+                decoded_contents = contents.decode("utf8")
+                error_data: Any = {"message": decoded_contents}
+                if response.content_type == "application/json":
+                    with contextlib.suppress(json.JSONDecodeError):
+                        error_data = json.loads(decoded_contents)
+                raise TechnoVEError(response.status, error_data)
 
-            if "application/json" in content_type:
+            if response.content_type == "application/json":
                 response_data = await response.json()
             else:
                 response_data = await response.text()
@@ -204,7 +201,7 @@ class TechnoVE:
         await self.request(
             "/station/control/partage",
             "POST",
-            {" stationNumber": 1, "current": max_current},
+            {"stationNumber": 1, "current": max_current},
         )
 
     async def set_high_tariff_schedule(self, *, enabled: bool) -> None:
