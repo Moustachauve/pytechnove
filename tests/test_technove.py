@@ -162,8 +162,19 @@ async def test_http_error400(aresponses: ResponsesMockServer) -> None:
 
 
 @pytest.mark.asyncio
-async def test_http_error500(aresponses: ResponsesMockServer) -> None:
-    """Test HTTP 500 response handling."""
+@pytest.mark.parametrize(
+    "content_type",
+    [
+        "application/json",
+        "application/json; charset=utf-8",
+        "Application/JSON; charset=utf-8",
+    ],
+)
+async def test_http_error500(
+    aresponses: ResponsesMockServer,
+    content_type: str,
+) -> None:
+    """Test HTTP 500 JSON response handling across Content-Type variants."""
     aresponses.add(
         "example.com",
         "/",
@@ -171,14 +182,40 @@ async def test_http_error500(aresponses: ResponsesMockServer) -> None:
         aresponses.Response(
             body=b'{"status":"nok"}',
             status=500,
+            headers={"Content-Type": content_type},
+        ),
+    )
+
+    async with aiohttp.ClientSession() as session:
+        technove = TechnoVE("example.com", session=session)
+        with pytest.raises(TechnoVEError) as exc_info:
+            await technove.request("/")
+        assert exc_info.value.args == (500, {"status": "nok"})
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("body", [b"", b"not json"])
+async def test_http_error_invalid_json(
+    aresponses: ResponsesMockServer,
+    body: bytes,
+) -> None:
+    """Test HTTP error response with malformed or empty JSON body."""
+    aresponses.add(
+        "example.com",
+        "/",
+        "GET",
+        aresponses.Response(
+            body=body,
+            status=500,
             headers={"Content-Type": "application/json"},
         ),
     )
 
     async with aiohttp.ClientSession() as session:
         technove = TechnoVE("example.com", session=session)
-        with pytest.raises(TechnoVEError):
-            assert await technove.request("/")
+        with pytest.raises(TechnoVEError) as exc_info:
+            await technove.request("/")
+        assert exc_info.value.args == (500, {"message": body.decode("utf8")})
 
 
 @pytest.mark.asyncio
@@ -315,6 +352,10 @@ async def test_set_max_current(aresponses: ResponsesMockServer) -> None:
         technove = TechnoVE("example.com", session=session)
         technove.station = Station({"maxStationCurrent": 32, "inSharingMode": False})
         await technove.set_max_current(32)
+        assert await aresponses.history[0].request.json() == {
+            "stationNumber": 1,
+            "current": 32,
+        }
         aresponses.assert_plan_strictly_followed()
 
 
@@ -416,4 +457,8 @@ async def test_set_max_current_no_station(
         technove = TechnoVE("example.com", session=session)
         assert technove.station is None
         await technove.set_max_current(32)
+        assert await aresponses.history[0].request.json() == {
+            "stationNumber": 1,
+            "current": 32,
+        }
         aresponses.assert_plan_strictly_followed()
